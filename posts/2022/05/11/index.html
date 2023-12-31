@@ -1,0 +1,231 @@
+<meta lang="zh" charset="utf-8">
+<meta property="og:title" content="GDC 2022 - 笔记" />
+<meta property="og:type" content="website">
+<meta property="og:description" content="ねぎまぐろ軍艦 - 日常碎碎念Blog">
+<link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/notosanssc.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/notosansjp.css">
+<style>body { font-size: 10pt; font-weight:300; font-family: 'Noto Sans SC', 'Noto Sans JP', sans-serif; }</style>
+
+**GDC 2022 - 笔记**
+	2022/05/11
+
+# Intro
+
+看了下去年的也没填...<br/>
+今年的virtual pass各种坑爹一堆talk看不了<br/>
+当然本来也只能看掉一部分就是了<br/>
+又说回来听别人讲制作经历不管是设计还是技术还是很有趣<br/>
+虽然怎么想都不值也依然想去现场听<br/>
+
+[Vault链接](https://www.gdcvault.com/browse/gdc-22)<br/>
+视频终于带多语言字幕了，不过订阅价格依然离谱<br/>
+
+# Design
+
+## [Breaking the Cycle The Making of Returnal](https://www.gdcvault.com/play/1027877/Breaking-the-Cycle-The-Making)
+
+Game Director讲的。觉得是个质量非常高的talk<br/>
+Returnal本来就很特殊，做惯2D弹幕的小团队搞起了3D大项目还讲起了故事，挑战自然是很多<br/>
+然后艺术风格/剧情梗概/游戏结构从pitch阶段就非常精准并且坚持到最后，整个执行都非常稳...<br/>
+Talk前半从pitch开始到围绕rogue/narrative/action+replayability几个piller展开细化<br/>
+很有意思的说是主角外形设定一开始都不太行，Art Director中途加入后第一天就搞出来<br/>
+特别是narrative部分"Aim to haunt the player"，不仅细化后目标明确，实现得性价比也相当高<br/>
+甚至能做到Defy definitive interpretation (even inside the team!)，就觉得把控太精准了...<br/>
+后半主要是针对gameplay，特别是从2D弹幕转3D的各个侧面进行goal/result分析，解释也很详细<br/>
+提到了 2D->3D / "Chaser" / Enemy Engagement / Encounter Design / Aiming / Bullet Hell<br/>
+整个talk信息量很足，并且描述也很准确，觉得就算不是director不做同类项目也有很多可以参考<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p88576811.jpg)
+
+# Visual Arts
+
+## [Art Direction Summit Building Night City](https://www.gdcvault.com/play/1027571/Art-Direction-Summit-Building-Night)
+
+Lead Environment Artist讲的。觉得内容一般<br/>
+从3rd person转FPS是不小的挑战，提到群众眼里Cyberpunk就长blade runner那样还得差异化<br/>
+要追求城市规模，还要平衡traversal，视觉上融合现实场景再营造对比，不同的区域不同的主题色<br/>
+团队里甚至还有专门搞Urban planning的人（设计真实城市的那种...）当然也得跟art平衡<br/>
+早期在旧tech环境里就搞定了各种规范，城市白模也有，边做游戏边造环境（做完就扔了投奔UE）<br/>
+以4种风格为基础来布置各个区域（记得游戏散步里倒是具体提到了各种asset做4套...）<br/>
+后半偏实现上的话题，landmark/point of interest/verticality之类的常见考量<br/>
+road/cable/foliage/terrain小工具造了一堆，城市规模上完全没procedural，Handcrafted city!<br/>
+整个听下来除了坚持handcraft以外感觉都是open world常见思路，没听到特别有意思的方法论<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p88576829.jpg)
+
+## [Creating the Many Faces of Horizon Forbidden West](https://www.gdcvault.com/play/1027878/Creating-the-Many-Faces-of)
+
+Lead character artist来讲的。（因为HZD的站桩对话质量实在是太烂了这次简直的质的飞跃...）<br/>
+介绍了和3lateral合作制作Digital Double的pipeline，然后组成一个gene pool<br/>
+搞了个叫gene splicer的工具来混合gene pool里面的各种特征<br/>
+Digital double可以直接塞进游戏里当路人，也可以进一步定制成特殊的角色<br/>
+后半还简单介绍了lookdev的流程，4倍多边形不仅边缘光滑了deformation质量也上去了<br/>
+整个印象就是相当的工业化... 有database然后各种自动匹配看起来真是方便<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p88595185.jpg)
+
+## [Restoring the Forest Capturing the Themes of Kena Through VFX](https://www.gdcvault.com/play/1027839/Visual-Effects-Summit-Restoring-the)
+
+Graphics Programmer讲的（不过主要还是偏visual arts）。不是什么很黑科技但是挺实用<br/>
+前半介绍了Deadzone的设计思路，从prototype到landscape/foliage/meshes的具体实现<br/>
+效果和实现都算是比较常见的做法，在一定区域内动态改变缩放模型，调整材质之类<br/>
+但其中专门做了一层overgrowth来saturate/scale up强化动态还是很不错的（想起juicy那套...）<br/>
+后半介绍了Rot Abilities，Geo Cache ~ Niagara ~ Skeleton Meshes的切换很出彩，表现流畅丰富<br/>
+确实这类多种技术交叉应用在workflow不那么死板的小团队里可以发挥更大的优势<br/>
+总结部分也强调了"Reinforce the Worldbuilding"，比如Rot Abilities也会影响Deadzone<br/>
+于是整个环境充满动态并且反馈很足，觉得技术不难但运用到这个程度还是不太容易的<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p88619098.jpg)
+
+## [The Making of Unitys Latest Flagship Demo, an Achievement in Graphics and Rendering](https://www.gdcvault.com/play/1028139/)
+
+Enemies那个demo的介绍。<br/>
+Eye, Skin, Hair稍微展开来讲了一点，不过因为上下文不足，内容也不深，不推荐...<br/>
+
+## [The Real-Time Volumetric Superstorms of 'Horizon Forbidden West’](https://www.gdcvault.com/play/1027688/The-Real-Time-Volumetric-Superstorms)
+
+VFX Artist来讲的。内容挺实在，不过前半一直在整理回顾所以内容其实不是很多。<br/>
+前半是基于同作者在SIGGRAPH2015的talk来进行基础普及。<br/>
+介绍了这套被称为Nubis的系统是怎样定义Cloud的Density，Lighting，<br/>
+以及Raymarching，Temporal upscaling的实现细节。大多是以前talk就提及的内容，再次整理。<br/>
+后半开始讲这次的进展，主要聚焦在Superstorm的实现上。<br/>
+从现实中supercell出发，分析形状以及光照的构成，再对Nubis系统进行扩展和调节。<br/>
+不仅针对Superstorm调整了density的定义，更专门为之加入了一套旋转着同心圆模型来表现漩涡。<br/>
+Density之外，还介绍了红色发光部分，雷电的实现，以及在游戏中控制superstorm的形式。<br/>
+最后提了一下这里也做了可以进去的云层，但估计要在别的talk讲了...<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p88936918.jpg)
+
+# Programming
+
+## [Simulating Tropical Weather in 'Far Cry 6'](https://www.gdcvault.com/play/1027675/Simulating-Tropical-Weather-in-Far)
+
+TA和3D Programmer讲的。觉得内容还算实在，但是作为技术大厂Ubi有点水了<br/>
+前半主要是天气系统，通过参数表格定义database，根据时间区域等计算出最终结果（也算常见）<br/>
+在wetness和雨天表现上下了不少功夫，基本上是一边贴代码一边介绍功能了<br/>
+后半概括性地介绍了Lighting/Atmosphere/VolumetricCloud/Fog/Reflection/Ocean和一些实现细节<br/>
+Volumetric Cloud的部分虽然新东西不多但是讲得详细地算是不错的参考资料了<br/>
+里面提到的Ubi前几年的几个talk，好奇地去搜了下presenter都已经不在Ubi了... 难怪没啥大feature<br/>
+整体来说毕竟在实现细节上的问题很多跟引擎环境紧密关联，Ubi之外帮助应该挺有限<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p88576835.jpg)
+
+## [A Quick Guide to Intels Ray Tracing Hardware](https://www.intel.com/content/www/us/en/events/developer/gdc-march-2022.html?videoid=6301519388001)
+
+Graphics Engineer来讲的。介绍Intel新显卡细节的，多少有广告成分<br/>
+前半主要介绍了为什么RayTracing会产生divergency，以及会导致整个wave都被拖慢<br/>
+Divergency主要来自BVH traversal，不同的material (hit shader)，不同的texture<br/>
+然后Intel Arc GPU通过所谓Async Raytracing，也就是硬件来sort ray来降低divergency<br/>
+因为DXR 1.0那套本来就是callback式的所以写代码的人并不需要额外实现<br/>
+然后对比DXR 1.1也就是RayQueries那套只能Sync所以效率不行<br/>
+另外还介绍了一些性能上需要注意的地方（其中一部分tips的普适性存疑）<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p88667584.jpg)
+
+## [Adventures with Deferred Texturing in 'Horizon Forbidden West’](https://www.gdcvault.com/play/1027553/Adventures-with-Deferred-Texturing-in)
+
+Senior Principal Tech programmer来讲的。<br/>
+开头介绍Horizon Zero Dawn的Foliage。之后是对Deferred Texturing的介绍。<br/>
+之后分别是系统概要以及一些包括VRS在内的实现细节，最后是Performance比较。<br/>
+Deferred Texuring/Visibility Buffer这几年又热门起来了...<br/>
+实现上的决策点主要是2个，visibility buffer里塞多少东西，填充手法pixel shader/tile/pixel list。<br/>
+Horizon这个主要是针对Foliage，并且目标是用async compute去overlap到cascade shadow上，<br/>
+于是最后是用了thin visibility + hybrid(tile, pixel list)，又由于各种限制实现上各种拆分巨复杂...<br/>
+不过因为讲得相当细，并且有成绩为证（毕竟游戏做出来了...），做相关工作的话还是很推荐。<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p88766507.jpg)
+
+## Performant Reflective Beauty Hybrid Raytracing with Far Cry 6
+
+Ubi和AMD的Programmer来讲的。分别是前半和后半。 <br/>
+前半主要是介绍Hybrid，SSLR和RayTracing共用了Ray Generation（因为是针对反射）。 <br/>
+然后SSLR居然是简单粗暴的linear trace效果更好，虽然也根据表面用了cone trace。<br/>
+又然后BVH居然只build了player周边的部分，Vertex Shading，还限制了LOD，感觉就是各种憋屈... <br/>
+后半是ShaderTable之类的具体实现，虽然没讲硬件相关的部分几乎没讲， <br/>
+但是可以推出来至少目前AMD是不会像Intel一样sort/pack ray的，所以大概只能自己缩水... <br/>
+Particle BVH的部分倒是希望细说下，貌似只提了下为了省traverse cost。<br/>
+
+## A Guided Tour of Blackreef Rendering Technologies in Deathloop
+
+Arkane和AMD的Programmer来讲的。分别是前半和后半。<br/>
+前半主要是介绍Arkane的Void Engine在制作Deathloop期间的变化。<br/>
+意外的Arkane在graphics上还是挺保守的，不仅换了deferred各种features都是中规中矩。<br/>
+虽然加了Raytracing也是因为没bindless只做了shadow和AO。不过AO搞了3套也是很神奇...<br/>
+后半内容比较少，就讲了barrier优化（一些老生常谈），和AMD特有的compression相关注意事项..<br/>
+最后草草地带过了一遍FSR2.0的介绍，毕竟另外专门有个talk讲这个。<br/>
+虽然整体没有特别有意思的部分，但是同样走保守路线的话也算个参考。<br/>
+
+## [NVIDIA DLSS Overview & Game Integrations](https://www.gdcvault.com/play/1028123/)
+
+如题，但是overview部分基本没讲啥，主要还是integration，受众挺小的宣传talk。<br/>
+还顺便介绍了2021年发布的Nsight Deep Learning Designer，连连看DL模型生成工具。<br/>
+
+## Intel XeSS – an AI based Super Sampling solution for Real-time Rendering
+
+如题，比上面的DLSS讲得更少。integration, runtime flow, tech stack之类的简单介绍。<br/>
+Intel倒是一直在强调会open source，并且也支持Intel以外的硬件。<br/>
+不过也直白地说了就是dp4a(dot product)什么GPU都行，专用硬件XMX也只是做同样的事而已。<br/>
+
+## Ray Tracing Performance Revealed
+
+Radeon的工具介绍。Profiler部分看起来还不错，不过也都是些基本就该有的功能。<br/>
+Radeon Raytracing Analyzer貌似就是个BVH查看器了...<br/>
+怀疑现在真的会有dev会专门为raytracing去优化assets？<br/>
+BVH相关的算法又不能调，最多就是踩到worst-case之类的调查回避一下的程度吧...<br/>
+
+## [Kickstart RT Easy Open Source Ray Tracing](https://www.gdcvault.com/play/1028122/)
+
+Nvidia搞的RayTracing SDK。包括Reflection, GI, AO, Shadow。<br/>
+特点是GI是基于BVH geometry来生成surfel的runtime light cache，不需要额外的加速结构。<br/>
+然后材质部分靠gbuffer解决，以回避raytracing通常的实现里最麻烦且开销最大的部分。<br/>
+感想是毕竟非侵入式的设计，运行时的预处理工作量应该不小，数据量也感觉不好控制...<br/>
+
+## [Acceleration Structures in Ray Traced Open World Games](https://www.gdcvault.com/play/1028126/)
+
+BLAS build time scales linearly while ray traversal scales logarithmically<br/>
+重要的话重复了3+遍。主题大概是围绕BLAS的memory和built开销。<br/>
+BLAS,TLAS的固定memory开销都不小。搞了RTXMU来管compaction，<br/>
+针对open world提出了把built完的BLAS cache起来而不是直接随streaming扔掉的方案。<br/>
+然后built因为scale不佳，所以如果build了就要多用不然会亏！<br/>
+
+## FidelityFX Super Resolution 2.0
+
+虽然还是叫FSR，但是跟1.0重心在sharpness filter上不同，<br/>
+FSR2.0感觉重心完全就是个better TAAU...<br/>
+负责sharpness的RCAS这波完全是被顺带了<br/>
+不过也确实说明了不依赖ML的土法Upsampling依然还有不少可以挖的空间<br/>
+
+## [Performance Tuning Games for Hybrid Architectures](https://www.gdcvault.com/play/1027818/)
+
+Alder Lake因为开始是Hybrid了于是各种角度都复杂了好多<br/>
+介绍了layout以及一些性能特性，然后是API，以及best practice之类<br/>
+Win10因为用不了hardware scheduler，而且还默认把normal priority放E-Cores去各种坑...<br/>
+虽说游戏确实有一堆东西可以塞E-Cores，但是做系统的人已经这么艰难了何必还要增加复杂度呢<br/>
+
+## [The Developer Journey How Intel and EXOR implemented XeSS in Riftbreaker](https://www.gdcvault.com/play/1027820/)
+
+前半都是这家叫EXOR的工作室的介绍，感觉跟Housemarque经历还挺像的<br/>
+EXOR专注做俯视角刷怪类，终于到Riftbreaker这一作小火了一把<br/>
+然后引擎也搞了很多年，ECS，FrameGraph啥的高级玩意都有，估计这些也是被Intel挑中的原因<br/>
+虽然后半XeSS也还算详细（比起其它talk），不过因为是integration角度其实没啥可以说的<br/>
+最后对比部分居然没有XeSS vs. TAA就很迷... 就光欺负没temporal upscaling的实现了...<br/>
+
+![](https://img9.doubanio.com/view/note/l/public/p89024158.jpg)
+
+## [Research Advances Toward Real-time Path Tracing](https://www.gdcvault.com/play/1028124/)
+
+如题。不过从ReSTIR以来大的进展好像也不多的样子<br/>
+但是光靠ReSTIR的基础和硬件发展的速度就已经能搞出不少real-time path tracing的例子了<br/>
+以后引擎里path tracer也迟到会是标配吧，游戏之外的interactive应用估计会更早地普及<br/>
+Path Demodulation那一套总感觉是虽然path tracer本身简单了，复杂度其实都丢到denoiser了而已<br/>
+
+## [RTX SDKs The Foundation of Next-gen Lighting for Games](https://www.gdcvault.com/play/1027805/)
+
+如题，就是SDK介绍... 主要是RTXDI, RTXGI, NRD, DLSS这4种<br/>
+基本上原理和流程以及integration都有讲，内容也算简明扼要，就是受众大概很少...<br/>
+RTXDI和RTXGI都是热门货，但是integration的步骤实在太复杂了<br/>
+DLSS部分还是很模糊，毕竟训练部分依然是作为黑科技没公开过...<br/>
+
+[Back to Homepage](.(./../../../../index.html)index.html)
+
+<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://morgan3d.github.io/markdeep/latest/markdeep.min.js?" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>

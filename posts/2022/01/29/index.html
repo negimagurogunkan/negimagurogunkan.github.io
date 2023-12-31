@@ -1,0 +1,205 @@
+<meta lang="zh" charset="utf-8">
+<meta property="og:title" content="GameDev视角下的色彩工学" />
+<meta property="og:type" content="website">
+<meta property="og:description" content="ねぎまぐろ軍艦 - 日常碎碎念Blog">
+<link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/notosanssc.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/notosansjp.css">
+<style>body { font-size: 16pt; font-weight:300; font-family: 'Noto Sans SC', 'Noto Sans JP', sans-serif; }</style>
+
+**GameDev视角下的色彩工学**
+	2022/01/29
+
+# Intro
+
+年初还计划每个月一篇blog的<br/>
+1月过完了也没能想出点有建设性的东西。<br/>
+Seminar讲了Low-discrepancy之后虽然整理了点<br/>
+但是不投入更多时间也不能比现成资料好。<br/>
+于是回顾下笔记凑个数。<br/>
+大概就是，有营养的再发blog，没营养的先发豆瓣（喂）<br/>
+
+其实标题就挺犯难的<br/>
+日文相关书籍都是色彩工学（Color Engineering）分类。<br/>
+但Color Engineering这词英文里又好像不常用。<br/>
+叫Color Science还更多点<br/>
+但做的事情感觉还是Engineering大于Science的...<br/>
+由于书和常见的文章都是从基础讲到应用的，<br/>
+想想既然是笔记回顾，就觉得不如倒过来从应用开始切入。<br/>
+因为知识量有限，只考虑GameDev语境。<br/>
+
+# sRGB
+
+GameDev里涉及到的有色素材目前基本还是以sRGB存储的。<br/>
+sRGB作为一个Color Space主要由<br/>
+
+- Primaries：定义Chromaticity diagram三角形的三个顶点的位置
+- White Point：定义白色
+- Transfer Function：定义传输用的变换函数
+
+3部分组成。（想贴图的但是日记排版太诡异了）<br/>
+不同的Color Space在这3者上会有不同的定义。<br/>
+因为后面HDR部分会提及，这里只限于sRGB话题。<br/>
+
+Primaries和White Point一般就是对应了这样的RGB数值。<br/>
+(1,0,0), (0,1,0), (0,0,1), (1,1,1) <br/>
+可以认为是颜色的上限，超出范围了就没有意义了。<br/>
+所以自然不同的Color Space下的纯色也可能是不一样的。<br/>
+
+Transfer Function也就是俗称的Gamma是GameDev最常设计的部分。<br/>
+因为它不仅被作为用来作为和显示设备交互时的变换（CRT Gamma）<br/>
+同时也是数据存储/传输时，最常用到的格式。<br/>
+特别是8bit RGB数据的前提下，<br/>
+使用Transfer Function之后才能勉强够存储视觉上足够的精度。<br/>
+
+这里也是GameDev里常见的坑之一。<br/>
+因为sRGB的Transfer Function不是一个单纯的指数函数，<br/>
+虽然有Gamma2.2的说法，但标准变换更为复杂，<br/>
+并不是单纯一个指数变换。<br/>
+Graphics API会自动处理一部分，但需要手动处理的时候就容易踩坑。<br/>
+特别是还要考虑runtime cost，texture packing之类...<br/>
+不过除了设备相关的部分之外，<br/>
+存储的目的也就是为了节约bit（空间/带宽）而已，<br/>
+所以也不一定要过于纠结符合标准..<br/>
+
+# Photoreal
+
+有不纠结标准的肯定就有纠结标准的。<br/>
+要实现照片级精度就得从输入开始就有高要求。<br/>
+然后sRGB的上限就体现出来了。<br/>
+一个在于Gamut（Chromaticity diagram上的三角形）太小，<br/>
+有很多颜色干脆就没法表现。<br/>
+之后提及的HDR就涉及到这一点。<br/>
+并且来自影视特别是ACES的普及影响也不小。<br/>
+另一个是除了常见显示器以外sRGB作为标准并不是那么普及。<br/>
+比如Forza GDC 2019的talk就提到，<br/>
+为了还原车的颜色是转到CIELab进行比较的。 <br/>
+（为此还找汽车行业借来巨贵的测量仪器） <br/>
+
+当然真追求起来RGB本身也有上限，<br/>
+因为实际即使只算可见光波长范围也很广。<br/>
+离线渲染倒是早就开始鼓捣Spectrum Rendering，<br/>
+GameDev还很难有大规模应用。<br/>
+但可以有UE支持RayTracing那会出的三棱镜demo之类的例子。<br/>
+也可以有Tsushima Siggraph 2021给的，<br/>
+通过魔改Color Space来获得更接近的结果的例子。<br/>
+等哪天GameDev里Spectrum Rendering也普及之后，<br/>
+怕不是就要开始纠结Photometry vs. Radiometry，<br/>
+也就是根据每个人的眼睛，<br/>
+进行Color matching function / Luminous efficiency function适配了。<br/>
+
+# Lighting
+
+之前提到存储/传输是用了Transfer Function，<br/>
+这里存储不限于文件形式，<br/>
+内存、显存、各种计算过程中也是有限精度的。<br/>
+实际计算光照的时候，需要还原回线性数值<br/>
+（相对于Luminance线性）。<br/>
+早年的游戏倒也不纠结这么多，不还原也照样算。<br/>
+后来慢慢写实的需求上来之后，在线性空间计算光照也算常识了。<br/>
+整个流程就变成从存文件转一次，计算光照还原，<br/>
+算完了再转一次，最后显示。<br/>
+再后来随着Photometry的普及，<br/>
+更是要以Lux/Lumen之类的物理单位来衡量。<br/>
+然后太阳就100,000lux以上了，bit又不够了。怎么办？<br/>
+于是搞出了一套根据上一帧画面预先scale一下的方法。<br/>
+显示之前则是用 ToneMapping 将数据映射到 0 ~ 1 之间。<br/>
+因为 ToneMapping 并没有标准，<br/>
+所以GameDev里偶尔也被顺便当调色来用。<br/>
+再再后来，HDR Display要普及了，事情更复杂了...<br/>
+
+# HDR Display
+
+HDR Display虽然主要是提高了能显示了亮度（nits）。<br/>
+但因为从渲染到显示本身就夹杂了各种非线性变换，<br/>
+所以Color相关的基本都受灾。<br/>
+于是当当当一大堆新标准（specification）出炉了。<br/>
+
+然后几年的标准斗争之后GameDev环境目前基本上统一到了PQ上面。<br/>
+PQ虽然不被称为Color Space，<br/>
+但也定义了Primaries，White Point，Transfer Function。<br/>
+具体引用了Rec.2020（BT.2020）标准。<br/>
+然后GameDev一直使用的sRGB，<br/>
+跟同一个系列里的Rec.709除了Transfer Function基本一致。<br/>
+于是简单粗暴的方法就是，<br/>
+渲染完了Rec.709 -> Rec.2020转一下<br/>
+（Gamut变大了，所以颜色也变了）<br/>
+再加个PQ Transfer Function就搞定了。<br/>
+
+说回来斗争也可能还没完。<br/>
+上面提到的PQ还只是数据标准，加上传输还有个PQ10（10bit）。<br/>
+显示设备方面则有HDR10（PQ）, HDR10+, DolbyVision, HLG这些。<br/>
+至少目前的局势来看... GameDev貌似只需要考虑PQ就行了。<br/>
+
+当然这只是搞定了显示设备，也就是说只是能正常输出而已。<br/>
+之前虽然有提到通过预先scale可以应付很高的亮度，<br/>
+但是主要问题是能显示的亮度范围，HDR稍微缓解了一点。<br/>
+从以前100~300nits的显示设备到现在能支持1000nits甚至高的亮度。<br/>
+但是设备普及毕竟不是一瞬间的事，<br/>
+所以做出来的东西又得支持SDR，又得支持HDR。<br/>
+还得看起来有差（亮度范围），然后又得差不多。<br/>
+（不然测试的人要疯）<br/>
+Lighting部分倒是没什么需要改的，<br/>
+但是后期部分，特别是ToneMapping和Color Correction，<br/>
+因为要处理的范围不同也得分别准备两套。<br/>
+
+等设备普及得差不多了下一步就得升级asset了。<br/>
+前面也有说目前asset production还是以sRGB（Rec.709）为主，<br/>
+最后转到Rec.2020。<br/>
+所以制作的时候看到的颜色其实跟输出的时候是不一样的...<br/>
+不过怕是设备普及了之后新标准又该出来了。<br/>
+
+# Color Adjustment
+
+## HSV
+RGB应为是符合人眼设计所以大部分情况都够用，<br/>
+但是要调整颜色视觉效果就有时会不太方便。<br/>
+于是又有HSV（Hue，Saturate，Value），<br/>
+这样可以从不同角度来调节的Color Space。<br/>
+GameDev里常见应用就是给每个asset（树，草等）上点不同的颜色，<br/>
+或者整个彩虹色之类。<br/>
+HSL也是类似但定义不太一样。<br/>
+
+## Blend
+
+sRGB（应用Transfer Function之后）混合也是年经话题。<br/>
+（好像特别是Game UI？）<br/>
+转回Transfer Function之前混合虽然听起来有道理也消除一部分问题，<br/>
+但看起来不ok的时候更多...<br/>
+2021年一个叫oklab的Color Space出来直接给了答案（？）<br/>
+一举成为Photoshop标准blend mode。<br/>
+然后Siggraph Asia 2021的Pigment Mixing好像也火了。<br/>
+不过一个是光一个是颜料。<br/>
+另外渲染过程中则会利用YCoCg之类的Color Space的视觉特性，<br/>
+来混合出更自然的结果。<br/>
+
+## Color Temperature
+
+也就是色温。貌似喜欢用Temperature来设定光源颜色的Artist也不少。<br/>
+然后常见White Point对应的标准光源D65，<br/>
+因为物理常数修订之后对应的6504K...<br/>
+又然后D65其实不在Planckian locus上，<br/>
+而在偏移一点的Daylight locus上...<br/>
+
+## Night
+
+开放世界潮流下下time of day也开始成标配了。<br/>
+亮度变化靠Hack整体光照，<br/>
+和Eye Adaption (Auto Exposure)能勉强撑起来。<br/>
+颜色变化则让角度晚上看东西黑白偏蓝的，<br/>
+Purkinje effect也成为了buzz word。<br/>
+究其原因还是眼睛里的<br/>
+杆体（偏亮度感知），锥体（偏色彩感知）本来就是两套系统。<br/>
+虽然各种后期在模拟Lens上也已经很吃力了，<br/>
+但是Vision相关的大概迟早也都会搞进来...<br/>
+
+# Outro
+
+参考资料就懒得再整理过来了，<br/>
+基本上搜Color Science和HDR就一大堆。<br/>
+GameDev相关主要集中在Siggraph和GDC。<br/>
+追根究底的话，<br/>
+还是得去电影，显示设备，照明设备相关的地方找资料比较靠谱。<br/>
+
+[Back to Homepage](./../../../../index.html)
+
+<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://morgan3d.github.io/markdeep/latest/markdeep.min.js?" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
